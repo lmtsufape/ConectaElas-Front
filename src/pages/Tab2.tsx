@@ -49,6 +49,7 @@ const Tab2: React.FC = () => {
             </div>
           ) : (
             <div className="card-container">
+              {/* AQUI IGOR */}
               <div className="card" onClick={() => history.push("/tabs/chat")}>
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
                 <p>Chat com Assistente</p>
