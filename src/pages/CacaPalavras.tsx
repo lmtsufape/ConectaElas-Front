@@ -8,10 +8,14 @@ import {
   IonButtons,
   IonBackButton,
   IonSpinner,
+  IonModal,
+  IonButton,
+  IonIcon,
 } from "@ionic/react";
 import "./CacaPalavras.css";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import api from "../Services/api";
+import { checkmarkCircle } from "ionicons/icons";
 
 interface CacaPalavrasData {
   id?: number;
@@ -102,6 +106,8 @@ function gerarGrid(palavras: string[], N = 8) {
 
 const CacaPalavras: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const history = useHistory();
+  const location = useLocation();
   const [data, setData] = useState<CacaPalavrasData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -110,6 +116,10 @@ const CacaPalavras: React.FC = () => {
   const [foundWords, setFoundWords] = useState<string[]>([]);
   const [foundCells, setFoundCells] = useState<string[]>([]);
   const [isSelecting, setIsSelecting] = useState(false);
+  const [showEndModal, setShowEndModal] = useState(false);
+
+  const searchParams = new URLSearchParams(location.search);
+  const fromManagement = searchParams.get("from") === "management";
 
   useEffect(() => {
     const load = async () => {
@@ -157,13 +167,39 @@ const CacaPalavras: React.FC = () => {
     const word = currentWord.toUpperCase();
 
     if (data.palavras.includes(word) && !foundWords.includes(word)) {
-      setFoundWords((prev) => [...prev, word]);
+      const updatedWords = [...foundWords, word];
+      setFoundWords(updatedWords);
       setFoundCells((prev) => [...prev, ...selectedCells]);
+
+      if (updatedWords.length === data.palavras.length) {
+        setShowEndModal(true);
+      }
     }
 
     setSelectedCells([]);
     setCurrentWord("");
     setIsSelecting(false);
+  };
+
+  const restartGame = () => {
+    if (!data) return;
+    const novaGrade = gerarGrid(data.palavras, data.grade?.linhas ?? 8);
+    setData((prev) => (prev ? { ...prev, grade: novaGrade } : prev));
+    setSelectedCells([]);
+    setCurrentWord("");
+    setFoundWords([]);
+    setFoundCells([]);
+    setIsSelecting(false);
+    setShowEndModal(false);
+  };
+
+  const goToThemes = () => {
+    setShowEndModal(false);
+    if (fromManagement) {
+      history.replace("/tabs/caca-palavras-management");
+    } else {
+      history.replace("/tabs/games/caca-palavras");
+    }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -243,6 +279,26 @@ const CacaPalavras: React.FC = () => {
 
       <IonContent fullscreen className="caca-content">
         <div className="caca-container">
+          <IonModal isOpen={showEndModal} className="end-modal" backdropDismiss={false}>
+            <div className="modal-box">
+              <div className="modal-title">Parabéns!</div>
+              <div style={{ display: "flex", justifyContent: "center", margin: "10px 0" }}>
+                <IonIcon icon={checkmarkCircle} style={{ color: "#2dd36f", fontSize: "64px" }} />
+              </div>
+              <div className="modal-message">
+                Você encontrou todas as palavras do caça-palavras!
+              </div>
+              <div className="modal-actions">
+                <IonButton onClick={restartGame}>
+                  Reiniciar jogo
+                </IonButton>
+                <IonButton fill="outline" onClick={goToThemes}>
+                  Voltar para temas
+                </IonButton>
+              </div>
+            </div>
+          </IonModal>
+
           <div
             className="caca-grid"
             style={{

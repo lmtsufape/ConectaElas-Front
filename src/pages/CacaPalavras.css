@@ -68,6 +68,7 @@
   
   .palavras h3 {
     margin-bottom: 8px;
+    color: #c41e65;
   }
   
   .palavras ul {
@@ -83,11 +84,80 @@
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 14px;
+    color: #666;
   }
   
   .palavras li.found {
     text-decoration: line-through;
-    color: #4caf50;
+    color: #14830c;
     font-weight: 600;
   }
   
+.end-modal {
+  --width: auto;
+  --height: auto;
+  --max-width: 90vw;
+  --max-height: 90vh;
+  --border-radius: 24px;
+}
+
+.end-modal::part(content) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.end-modal::part(backdrop) {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.end-modal .modal-box {
+  width: 280px;
+  max-width: 80vw;
+  min-height: unset;
+  height: auto;
+  background: transparent;
+  color: #ffffff;
+  border-radius: 24px;
+  padding: 12px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+  border: 1px solid rgba(255,255,255,0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.end-modal .modal-title {
+  font-weight: 600;
+  text-align: center;
+  color: #ffffff;
+}
+
+[data-theme="light"] .end-modal .modal-title {
+  color: var(--cor-principal);
+}
+
+.end-modal .modal-message {
+  text-align: center;
+  margin-top: 8px;
+  color: #ffffff;
+}
+
+[data-theme="light"] .end-modal .modal-message {
+  color: var(--cor-principal);
+}
+
+.end-modal .modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: stretch;
+  margin-top: 10px;
+}
+
+.end-modal .modal-actions ion-button {
+  width: 100%;
+}
