@@ -164,6 +164,7 @@ const QuizManagement: React.FC = () => {
             data: {
               Resposta: resposta.texto,
               Correcao: resposta.correta,
+              Explicacao: resposta.explicacao,
               pergunta: {
                 id: perguntaId
               }
@@ -345,6 +346,7 @@ const handleUpdateQuiz = async () => {
           data: {
             Resposta: resposta.texto,
             Correcao: resposta.correta,
+            Explicacao: resposta.explicacao,
             pergunta: {
               id: perguntaId
             }

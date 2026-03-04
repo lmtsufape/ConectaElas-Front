@@ -1,6 +1,8 @@
-/* PalavrasCruzadasManagement Styles - Exact Visual Match with Image */
+/* PalavrasCruzadasManagement Styles */
+
+/* --- Management Screen Styles --- */
 .management-content {
-  --background: #f2f2f2; /* Exact light grey from image */
+  --background: #f2f2f2;
 }
 
 .management-container {
@@ -9,7 +11,7 @@
   margin: 0 auto;
 }
 
-/* Management Card - Aligned with CardManagement */
+/* Management Card */
 .management-card {
   margin-bottom: 16px;
   border-radius: 16px;
@@ -52,13 +54,204 @@
   color: var(--ion-color-medium);
 }
 
-/* Action Buttons Container - Matching CardManagement spacing */
+/* Action Buttons Container */
 .action-buttons-container {
   display: flex;
   justify-content: flex-end;
-  flex-wrap: nowrap; /* Garante linha única */
+  flex-wrap: nowrap;
   gap: 8px;
   margin-top: 10px;
+}
+
+.action-buttons-container IonButton {
+  --border-radius: 10px !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+}
+
+/* Override for danger button in card */
+.management-card ion-button[color="danger"] {
+  --color: #ffffff !important;
+  --background: #dc3545 !important;
+}
+
+/* --- Header Styles --- */
+.header-gradient {
+  background: linear-gradient(to right, #9c27b0, #e91e63) !important;
+  --background: linear-gradient(to right, #9c27b0, #e91e63) !important;
+  color: white;
+}
+
+.title-centered {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* --- Form / Modal Styles (Quiz-like) --- */
+.quiz-form-content {
+  --background: #f2f2f2;
+}
+
+.quiz-result-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.input-container {
+  margin-bottom: 15px;
+}
+
+.input-label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 16px;
+  display: block;
+}
+
+/* Override ion-item to match QuizForm look */
+.quiz-result-container ion-item {
+  --background: transparent !important;
+  --border-width: 0 !important;
+  --inner-border-width: 0 !important;
+  --border-color: transparent !important;
+  --inner-padding-end: 0 !important;
+  --inner-padding-start: 0 !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  margin: 0 !important;
+}
+
+.quiz-result-container ion-item ion-label {
+  color: var(--ion-color-primary) !important;
+  font-weight: 600 !important;
+  margin-bottom: 8px !important;
+}
+
+/* Custom Input Styling */
+.quiz-result-container .custom-input {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 16px;
+  background-color: #fff;
+  width: 100%;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --border-radius: 10px;
+  --placeholder-color: #999;
+  --border-color: #ccc;
+  --highlight-color-focused: transparent;
+  --color: #333 !important;
+  --caret-color: #dd2273 !important;
+  caret-color: #dd2273 !important;
+  margin-bottom: 0;
+  transition: all 0.2s ease;
+}
+
+.quiz-result-container .custom-input:focus-within {
+  border-color: #dd2273;
+  background-color: #ffe6f8 !important;
+  box-shadow: 0 0 6px rgba(221, 34, 115, 0.3);
+  --background: #ffe6f8 !important;
+  --caret-color: #dd2273 !important;
+  caret-color: #dd2273 !important;
+}
+
+/* Question Items Container */
+.pergunta-container {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 
+              0 6px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  background-color: #ffe6f0;
+  margin-top: 15px;
+  transform: translateY(-3px) scale(1.01);
+}
+
+.pergunta-container:hover {
+  box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
+              0 10px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.03);
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.question-number {
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  font-size: 1.1rem;
+}
+
+.remove-button-quiz {
+  --background: transparent !important;
+  --box-shadow: none !important;
+  --color: var(--ion-color-danger) !important;
+  color: var(--ion-color-danger) !important;
+  margin-left: 8px;
+}
+
+.remove-button-quiz ion-icon {
+  color: var(--ion-color-danger) !important;
+}
+
+/* Action Buttons */
+.action-button {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: white;
+  margin-top: 15px;
+  --border-radius: 10px;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  --background: linear-gradient(135deg, var(--ion-color-primary-shade), var(--ion-color-secondary-shade));
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.navigation-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+/* --- Dark Mode Support --- */
+body.dark .management-content,
+body.dark .quiz-form-content {
+  --background: #121212;
+}
+
+body.dark .management-card,
+body.dark .custom-input {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+body.dark .card-title-pink,
+body.dark .question-number {
+  color: #f06292;
+}
+
+/* --- Responsive Styles --- */
+@media (min-width: 768px) {
+  .pergunta-container {
+    padding: 20px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -81,117 +274,17 @@
     font-size: 1.1rem !important;
     margin-right: 4px !important;
   }
-}
 
-.action-buttons-container IonButton {
-  --border-radius: 10px !important;
-  font-weight: 500 !important;
-  margin: 0 !important;
-}
-
-/* Override for danger button to match CardManagement.css exactly */
-.management-card ion-button[color="danger"] {
-  --color: #ffffff !important;
-  --background: #dc3545 !important;
-}
-
-/* Header Gradient */
-.header-gradient {
-  background: linear-gradient(to right, #9c27b0, #e91e63) !important;
-  --background: linear-gradient(to right, #9c27b0, #e91e63) !important;
-  color: white;
-}
-
-.title-centered {
-  text-align: center;
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-/* Modal Form Styles - Consistency */
-.quiz-form-content {
-  --background: #f2f2f2;
-}
-
-.quiz-form-container {
-  padding: 20px;
-}
-
-.section-title h3 {
-  color: #e91e63;
-  border-bottom: 3px solid #e91e63;
-  margin: 24px 0 16px 0;
-  padding-bottom: 8px;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 1.1rem;
-}
-
-.quiz-save-button {
-  --background: #e91e63;
-  --color: white;
-  --border-radius: 10px;
-  font-weight: 700;
-  height: 54px;
-  margin-top: 24px;
-  --box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
-}
-
-.field-label {
-  color: #e91e63 !important;
-  font-weight: 700 !important;
-  margin-bottom: 10px;
-  display: block;
-  font-size: 1.1rem;
-}
-
-.custom-input {
-  background: #ffffff;
-  border: 2px solid #eee;
-  border-radius: 12px;
-  padding: 6px 14px;
-  margin-bottom: 16px;
-  transition: border-color 0.3s ease;
-}
-
-.custom-input:focus-within {
-  border-color: #e91e63;
-}
-
-.form-card-pink {
-  background: white;
-  border: 1px solid #f0f0f0;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-}
-
-.question-number {
-  color: #e91e63;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-}
-
-/* Dark Mode Support */
-body.dark .management-content,
-body.dark .quiz-form-content {
-  --background: #121212;
-}
-
-body.dark .management-card,
-body.dark .form-card-pink,
-body.dark .custom-input {
-  background-color: #1e1e1e;
-  border-color: #333;
-}
-
-body.dark .card-title-pink,
-body.dark .question-number {
-  color: #f06292;
-}
-
-body.dark .btn-edit-pink {
-  background-color: #f06292;
+  .pergunta-container {
+    padding: 12px;
+  }
+  
+  .input-label {
+    font-size: 14px;
+  }
+  
+  .custom-input {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
 }

@@ -23,9 +23,10 @@ import {
   IonCardContent,
   IonFooter,
   IonBadge,
-  IonNote
+  IonNote,
+  IonItem
 } from "@ionic/react";
-import { close, add, trash, create, gameController, moon, play } from "ionicons/icons";
+import { close, add, trash, create, gameController, moon, play, checkmark, addCircle } from "ionicons/icons";
 import api from "../Services/api"; 
 import "./PalavrasCruzadasManagement.css";
 
@@ -296,70 +297,83 @@ const PalavrasCruzadasManagement: React.FC = () => {
 
     return (
       <IonContent className="quiz-form-content">
-        <div className="quiz-form-container">
-          <div className="pergunta-container">
-            <IonLabel position="stacked" className="field-label">Título da Cruzadinha</IonLabel>
-            <div className="custom-input">
+        <div className="quiz-result-container ion-padding">
+          <IonCardContent>
+            <IonItem>
+              <IonLabel position="stacked">Título da Cruzadinha</IonLabel>
               <IonInput
                 value={data.titulo}
                 placeholder="Ex: Animais da Floresta"
                 onIonChange={e => setData({ ...data, titulo: e.detail.value! })}
+                className="custom-input"
               />
-            </div>
-          </div>
+            </IonItem>
 
-          <div className="section-title">
-            <h3>Palavras e Dicas</h3>
-            <IonButton fill="solid" size="small" className="add-button" onClick={addItem}>
-              <IonIcon icon={add} slot="start" />
-              Adicionar
-            </IonButton>
-          </div>
-
-          <div className="perguntas-grid-form">
             {data.itens.map((item, index) => (
-              <div key={index} className="pergunta-container form-card-pink">
+              <div key={index} className="pergunta-container">
                 <div className="question-header">
-                  <span className="question-number">Palavra #{index + 1}</span>
-                  {data.itens.length > 1 && (
-                    <IonButton 
-                      fill="clear" 
-                      color="danger"
-                      onClick={() => removeItem(index)}
-                    >
-                      <IonIcon icon={trash} slot="icon-only"/>
-                    </IonButton>
-                  )}
+                  <div className="question-number">Palavra #{index + 1}</div>
+                  <IonButton 
+                    className="remove-button-quiz"
+                    fill="clear" 
+                    color="danger"
+                    size="small"
+                    onClick={() => removeItem(index)}
+                    disabled={data.itens.length <= 1}
+                  >
+                    <IonIcon icon={trash} slot="start"/>
+                    Remover
+                  </IonButton>
                 </div>
 
-                <IonLabel className="field-label">Palavra (Resposta)</IonLabel>
-                <div className="custom-input">
+                <div className="input-container">
+                  <label className="input-label">Palavra (Resposta)</label>
                   <IonInput
                     value={item.palavra}
                     placeholder="Ex: LEAO"
                     onIonChange={e => handleItemChange(index, 'palavra', e.detail.value!)}
-                    className="uppercase-input"
+                    className="custom-input uppercase-input"
                   />
                 </div>
 
-                <IonLabel className="field-label" style={{ marginTop: '10px' }}>Dica</IonLabel>
-                <div className="custom-input">
+                <div className="input-container">
+                  <label className="input-label">Dica</label>
                   <IonTextarea
                     value={item.dica}
                     placeholder="Ex: Rei da selva"
                     rows={2}
                     onIonChange={e => handleItemChange(index, 'dica', e.detail.value!)}
+                    className="custom-input"
                   />
                 </div>
               </div>
             ))}
-          </div>
 
-          <div className="navigation-buttons">
-            <IonButton expand="block" className="quiz-save-button" onClick={onSave} disabled={isUpdating}>
-              {isUpdating ? <IonSpinner name="crescent" /> : (isEdit ? "Salvar Alterações" : "Criar Cruzadinha")}
-            </IonButton>
-          </div>
+            <div className="navigation-buttons">
+              <IonButton 
+                className="action-button" 
+                expand="block" 
+                onClick={addItem}
+              >
+                <IonIcon icon={addCircle} slot="start" />
+                Adicionar Palavra
+              </IonButton>
+
+              <IonButton 
+                className="action-button" 
+                expand="block" 
+                onClick={onSave} 
+                disabled={isUpdating}
+              >
+                {isUpdating ? <IonSpinner name="crescent" /> : (
+                  <>
+                    <IonIcon slot="start" icon={checkmark} />
+                    {isEdit ? "Atualizar Cruzadinha" : "Criar Cruzadinha"}
+                  </>
+                )}
+              </IonButton>
+            </div>
+          </IonCardContent>
         </div>
       </IonContent>
     );
