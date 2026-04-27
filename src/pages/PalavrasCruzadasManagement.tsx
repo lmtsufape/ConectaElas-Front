@@ -33,10 +33,10 @@ import "./PalavrasCruzadasManagement.css";
 interface PalavrasCruzadasItem {
   id: number;
   documentId?: string;
-  Titulo: string;
-  titulo?: string;
+  titulo: string;
   palavras: string[];
   dicas: string[];
+  Titulo?: string; // Mantendo por compatibilidade se o back ainda retornar
 }
 
 interface NovaCruzada {
@@ -125,11 +125,9 @@ const PalavrasCruzadasManagement: React.FC = () => {
 
       const payload = {
         data: {
-          titulo: novaCruzada.titulo, 
-          Titulo: novaCruzada.titulo,
+          titulo: novaCruzada.titulo,
           palavras: palavrasArray,
-          dicas: dicasArray,
-          grade: { grade: [], linhas: 0, colunas: 0 } 
+          dicas: dicasArray
         }
       };
 
@@ -223,11 +221,9 @@ const PalavrasCruzadasManagement: React.FC = () => {
 
       await api.put(`/palavras-cruzadas/${docId}`, {
         data: {
-          Titulo: cruzadaParaEditar.titulo,
           titulo: cruzadaParaEditar.titulo,
           palavras: palavrasArray,
-          dicas: dicasArray,
-          grade: { grade: [], linhas: 0, colunas: 0 } 
+          dicas: dicasArray
         }
       });
 
@@ -384,7 +380,7 @@ const PalavrasCruzadasManagement: React.FC = () => {
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tabs/management" />
+            <IonBackButton defaultHref="/tabs/games" />
           </IonButtons>
           <IonTitle className="title-centered">Gerenciamento de Cruzadinhas</IonTitle>
           <IonButtons slot="end">

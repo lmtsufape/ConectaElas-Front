@@ -58,35 +58,22 @@ const TabsLayout: React.FC = () => {
   const location = useLocation();
 
   const path = location.pathname;
-  let selectedTab: string = "tab2";
+  let selectedTab: string = "";
 
-  if (path.startsWith("/tabs/tab1")) selectedTab = "tab1";
-  else if (
-    path.startsWith("/tabs/tab2") ||
-    path.startsWith("/tabs/chat") ||
-    path.startsWith("/tabs/ReportChannels") ||
-    path.startsWith("/tabs/AngelContact")
-  )
-    selectedTab = "tab2";
-  else if (
-    path.startsWith("/tabs/games") ||
-    path.startsWith("/tabs/quiz") ||
-    path.startsWith("/tabs/quiz-detail") ||
-    path.startsWith("/tabs/quiz-result") ||
-    path.startsWith("/tabs/quiz-management") ||
-    path.startsWith("/tabs/minigames-progress") ||
-    path.startsWith("/tabs/palavras-cruzadas-management")
-  )
-    selectedTab = "games";
-  else if (path.startsWith("/tabs/sobre")) selectedTab = "sobre";
-  else if (
-    path.startsWith("/tabs/tab3") ||
-    path.startsWith("/tabs/management") ||
-    path.startsWith("/tabs/card-management") ||
-    path.startsWith("/tabs/caca-palavras-management")
-  ) {
-    selectedTab = "tab3";
-  }
+  if (path === "/tabs/tab1") selectedTab = "tab1";
+  else if (path === "/tabs/tab2") selectedTab = "tab2";
+  else if (path === "/tabs/games") selectedTab = "games";
+  else if (path === "/tabs/sobre") selectedTab = "sobre";
+  else if (path === "/tabs/tab3") selectedTab = "tab3";
+
+  const getTabStyle = (tabId: string) => ({
+    "--color-selected":
+      selectedTab === tabId ? "var(--cor-secundaria)" : "var(--cor-principal)",
+    "--color":
+      selectedTab === tabId ? "var(--cor-secundaria)" : "var(--cor-principal)",
+    color:
+      selectedTab === tabId ? "var(--cor-secundaria)" : "var(--cor-principal)",
+  });
 
   return (
     <IonTabs>
@@ -211,12 +198,12 @@ const TabsLayout: React.FC = () => {
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom" selectedTab={selectedTab}>
-        <IonTabButton tab="tab1" href="/tabs/tab1">
+        <IonTabButton tab="tab1" href="/tabs/tab1" style={getTabStyle("tab1")}>
           <IonIcon icon={homeSharp} />
           <IonLabel>Início</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="tab2" href="/tabs/tab2">
+        <IonTabButton tab="tab2" href="/tabs/tab2" style={getTabStyle("tab2")}>
           <span
             style={{
               display: "inline-block",
@@ -238,17 +225,17 @@ const TabsLayout: React.FC = () => {
           <IonLabel>Conexões</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="games" href="/tabs/games">
+        <IonTabButton tab="games" href="/tabs/games" style={getTabStyle("games")}>
           <IonIcon icon={gameControllerSharp} />
           <IonLabel>Jogos</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="sobre" href="/tabs/sobre">
+        <IonTabButton tab="sobre" href="/tabs/sobre" style={getTabStyle("sobre")}>
           <IonIcon icon={informationCircleSharp} />
           <IonLabel>Sobre</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="tab3" href="/tabs/tab3">
+        <IonTabButton tab="tab3" href="/tabs/tab3" style={getTabStyle("tab3")}>
           <span
             style={{
               display: "inline-block",

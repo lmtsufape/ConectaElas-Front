@@ -9,9 +9,14 @@ import {
   IonBackButton,
   IonSpinner,
   IonToast,
+  IonModal,
+  IonButton,
+  IonIcon,
+  useIonViewDidLeave,
 } from "@ionic/react";
 import "./PalavrasCruzadas.css";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
+import { trophyOutline, refreshOutline, listOutline } from "ionicons/icons";
 import { useAuth } from "../Contexts/AuthContext";
 import { criarPontuacao } from "../Services/PontuacaoService";
 
@@ -37,7 +42,8 @@ interface Pista {
 
 const PalavrasCruzadas: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const history = useHistory();
+  const { user, isAssistant } = useAuth();
   const [data, setData] = useState<CruzadaData | null>(null);
   const [loading, setLoading] = useState(true);
   const [userGrid, setUserGrid] = useState<(string | null)[][]>([]);
@@ -52,6 +58,7 @@ const PalavrasCruzadas: React.FC = () => {
   >("success");
   const [salvandoPontuacao, setSalvandoPontuacao] = useState<boolean>(false);
   const [pontuacaoSalva, setPontuacaoSalva] = useState<boolean>(false);
+  const [showCompletionModal, setShowCompletionModal] = useState<boolean>(false);
 
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
@@ -90,6 +97,15 @@ const PalavrasCruzadas: React.FC = () => {
 
     load();
   }, [id]);
+
+  useIonViewDidLeave(() => {
+    const pistasResolvidas = pistas.filter(
+      (p) => status[p.number] === "ok",
+    ).length;
+    if (user?.id && pistas && pistas.length > 0 && pistasResolvidas > 0 && !pontuacaoSalva) {
+      salvarPontuacaoNoBackend();
+    }
+  });
 
   const salvarPontuacaoNoBackend = async () => {
     if (
@@ -142,8 +158,42 @@ const PalavrasCruzadas: React.FC = () => {
     const todasResolvidas = pistas.every((p) => status[p.number] === "ok");
     if (todasResolvidas && !pontuacaoSalva) {
       salvarPontuacaoNoBackend();
+      setShowCompletionModal(true);
     }
   }, [status, pistas]);
+
+  const restartGame = () => {
+    if (!data) return;
+    const newGrid = data.grade.grade.map((row: (string | null)[]) =>
+      row.map((cell: string | null) => (cell ? "" : null)),
+    );
+    setUserGrid(newGrid);
+    setStatus({});
+    setSolvedCells(new Set());
+    setPontuacaoSalva(false);
+    setShowCompletionModal(false);
+    setActive(null);
+  };
+
+  const goToThemes = () => {
+    if (data) {
+      const cleanGrid = data.grade.grade.map((row: (string | null)[]) =>
+        row.map((cell: string | null) => (cell ? "" : null)),
+      );
+      setUserGrid(cleanGrid);
+    }
+    setStatus({});
+    setSolvedCells(new Set());
+    setPontuacaoSalva(false);
+    setShowCompletionModal(false);
+    setActive(null);
+
+    if (isAssistant || user?.tipo === "SECRETARIO" || user?.tipo === "ADMINISTRADOR") {
+      history.replace("/tabs/palavras-cruzadas-management");
+    } else {
+      history.replace("/tabs/games/palavras-cruzadas");
+    }
+  };
 
   const detectPistas = (
     grid: (string | null)[][],
@@ -248,8 +298,26 @@ const PalavrasCruzadas: React.FC = () => {
     });
 
     if (newVal !== "") {
-      const nr = active.direction === "H" ? r : r + 1;
-      const nc = active.direction === "H" ? c + 1 : c;
+      let nr = active.direction === "H" ? r : r + 1;
+      let nc = active.direction === "H" ? c + 1 : c;
+
+      // Pula células que já estão preenchidas OU que já foram acertadas
+      while (
+        copy[nr] !== undefined &&
+        copy[nr][nc] !== undefined &&
+        (solvedCells.has(`${nr}-${nc}`) || (copy[nr][nc] !== "" && copy[nr][nc] !== null))
+      ) {
+        const isWithinWord =
+          active.direction === "H"
+            ? nr === active.row && nc < active.col + active.answer.length
+            : nc === active.col && nr < active.row + active.answer.length;
+
+        if (!isWithinWord) break;
+
+        if (active.direction === "H") nc++;
+        else nr++;
+      }
+
       const nextInput = inputRefs.current[`cell-${nr}-${nc}`];
       if (nextInput) nextInput.focus();
     }
@@ -378,11 +446,48 @@ const PalavrasCruzadas: React.FC = () => {
                       onChange={(e) => handleType(r, c, e.target.value)}
                       onKeyDown={(e) => {
                         const isLetter = /^[a-zA-Z]$/.test(e.key);
-                        if (
-                          !isLetter &&
-                          e.key !== "Backspace" &&
-                          e.key !== "Tab"
-                        ) {
+                        if (e.key === "Backspace") {
+                          e.preventDefault(); // Assume controle total do Backspace
+
+                          // Se a célula atual já foi acertada, não faz nada (embora deva estar disabled)
+                          if (solvedCells.has(`${r}-${c}`)) return;
+
+                          const copy = userGrid.map((row) => [...row]);
+
+                          if (userGrid[r][c] !== "" && userGrid[r][c] !== null) {
+                            // Se a célula atual tem algo, apenas limpa ela
+                            copy[r][c] = "";
+                            setUserGrid(copy);
+                          } else if (active) {
+                            // Se a célula já está vazia, volta para a anterior
+                            let pr = active.direction === "H" ? r : r - 1;
+                            let pc = active.direction === "H" ? c - 1 : c;
+
+                            // Pula células que já foram acertadas (solved)
+                            while (solvedCells.has(`${pr}-${pc}`)) {
+                              if (active.direction === "H") pc--;
+                              else pr--;
+                            }
+
+                            // Verifica se a célula anterior encontrada ainda faz parte da palavra ativa
+                            const isWithinWord =
+                              active.direction === "H"
+                                ? pr === active.row && pc >= active.col
+                                : pc === active.col && pr >= active.row;
+
+                            if (isWithinWord) {
+                              // Limpa a célula anterior (que não é solved) e foca nela
+                              copy[pr][pc] = "";
+                              setUserGrid(copy);
+
+                              const prevInput =
+                                inputRefs.current[`cell-${pr}-${pc}`];
+                              if (prevInput) {
+                                prevInput.focus();
+                              }
+                            }
+                          }
+                        } else if (!isLetter && e.key !== "Tab") {
                           e.preventDefault();
                         }
                       }}
@@ -406,8 +511,8 @@ const PalavrasCruzadas: React.FC = () => {
                       active?.number === pista.number ? "bold" : "normal",
                     color:
                       active?.number === pista.number
-                        ? "var(--ion-color-primary)"
-                        : "inherit",
+                        ? "#dd2273"
+                        : "#666",
                   }}
                   onClick={() => {
                     setActive(pista);
@@ -431,6 +536,28 @@ const PalavrasCruzadas: React.FC = () => {
           color={toastColor}
           position="bottom"
         />
+
+        <IonModal
+          isOpen={showCompletionModal}
+          onDidDismiss={() => setShowCompletionModal(false)}
+          className="end-modal"
+          backdropDismiss={false}
+        >
+          <div className="modal-box">
+            <div className="modal-title">Jogo finalizado</div>
+            <div className="modal-message">
+              Que legal! Você chegou até o final
+            </div>
+            <div className="applause">👏👏👏</div>
+
+            <div className="modal-actions">
+              <IonButton onClick={restartGame}>Reiniciar o jogo</IonButton>
+              <IonButton fill="outline" onClick={goToThemes}>
+                Voltar para temas
+              </IonButton>
+            </div>
+          </div>
+        </IonModal>
       </IonContent>
     </IonPage>
   );

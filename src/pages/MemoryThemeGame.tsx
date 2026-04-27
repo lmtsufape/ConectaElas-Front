@@ -332,12 +332,9 @@ const MemoryThemeGame: React.FC = () => {
   };
 
   useEffect(() => {
-    // Only show end modal if reward modal is NOT showing
     if ((allMatched || gameOver) && cards.length > 0 && !showRewardModal) {
       setShowEndModal(true);
-      if (allMatched) {
-        salvarPontuacaoNoBackend();
-      }
+      salvarPontuacaoNoBackend();
     }
   }, [allMatched, gameOver, cards.length, showRewardModal]);
 
@@ -350,7 +347,9 @@ const MemoryThemeGame: React.FC = () => {
     if (fromManagement) {
       history.replace("/tabs/card-management");
     } else {
-      history.push("/tabs/games/memory");
+      // Usamos replace aqui para que o jogo não fique no histórico
+      // Assim, ao apertar 'Voltar' na lista de temas, o usuário vai para a tela de minigames
+      history.replace("/tabs/games/memory");
     }
   };
 

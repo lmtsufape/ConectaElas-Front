@@ -19,8 +19,8 @@ import {
 import { 
   schoolOutline, 
   albumsOutline,
-  chevronForwardOutline,
-  gridOutline
+  gridOutline,
+  chevronForwardOutline 
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import './ManagementHub.css';

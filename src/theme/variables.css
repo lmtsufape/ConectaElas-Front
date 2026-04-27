@@ -119,24 +119,37 @@ ion-page ion-header ion-toolbar ion-title,
 /* Tab Bar */
 ion-app ion-tab-bar {
   --background: var(--surface) !important;
-  --color: var(--text-color) !important;
-  --color-selected: var(--ion-color-primary-contrast) !important;
-  --ion-color-primary: var(--ion-color-primary) !important;
+  --color: var(--cor-principal); /* Rosa para ícones não selecionados */
+  --color-selected: var(--cor-secundaria); /* Roxo para ícone selecionado */
   border: var(--border-color) !important;
   box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25) !important;
 }
 
 ion-app ion-tab-button {
-  --color: var(--cor-principal) !important;
-  --color-selected: var(--cor-secundaria) !important;
-  --ripple-color: rgba(255, 255, 255, 0.3) !important;
-  color: var(--cor-principal) !important;
+  --color: var(--cor-principal);
+  --color-selected: var(--cor-secundaria);
+  --ripple-color: rgba(114, 0, 121, 0.1) !important;
+  color: var(--cor-principal);
   transition: color 0.2s ease !important;
 }
 
+ion-app ion-tab-button.tab-selected {
+  --color: var(--cor-secundaria);
+  color: var(--cor-secundaria);
+}
+
 ion-app ion-tab-button:hover {
-  --color: var(--cor-secundaria) !important;
-  color: var(--cor-secundaria) !important;
+  color: var(--cor-secundaria);
+}
+
+/* Garante que o ícone dentro do botão selecionado também mude de cor */
+ion-app ion-tab-button.tab-selected ion-icon {
+  color: var(--cor-secundaria);
+}
+
+/* Garante que o label dentro do botão selecionado também mude de cor */
+ion-app ion-tab-button.tab-selected ion-label {
+  color: var(--cor-secundaria);
 }
 
 

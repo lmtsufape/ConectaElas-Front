@@ -91,6 +91,16 @@ const QuizDetail: React.FC = () => {
     fetchQuiz();
   }, [id]);
 
+  useEffect(() => {
+    const handler = (ev: any) => {
+      ev.detail.register(10, () => {
+        history.replace(quizListHref);
+      });
+    };
+    document.addEventListener("ionBackButton", handler as any);
+    return () => document.removeEventListener("ionBackButton", handler as any);
+  }, [history, quizListHref]);
+
   const handleRespostaChange = (perguntaId: number, resposta: string) => {
     setRespostas((prev) => ({
       ...prev,
@@ -251,7 +261,7 @@ const QuizDetail: React.FC = () => {
           </div>
         </div>
 
-        <IonCard className="question-card">
+        <IonCard className="question-card" key={`question-${currentQuestionIndex}`}>
           <IonCardHeader>
             <IonCardTitle className="question-title">
               {currentQuestion.Questao}

@@ -19,7 +19,7 @@ import {
   IonButtons,
   IonBackButton,
 } from "@ionic/react";
-import { refreshOutline, createOutline } from "ionicons/icons";
+import { refreshOutline, createOutline, chevronBackOutline } from "ionicons/icons";
 import "./QuizList.css";
 
 interface CruzadaItem {
